@@ -20,6 +20,7 @@ As of the start of the project, we have completed the initial planning and docum
 The following items represent the backlog for the initial foundational build:
 
 -   **[ ] Project Initialization**:
+    -   [x] Initialize Git repository.
     -   [ ] Initialize Next.js project.
     -   [ ] Install and configure Convex, TypeScript, and Tailwind CSS.
     -   [ ] Create the defined project directory structure.
@@ -41,3 +42,4 @@ The following items represent the backlog for the initial foundational build:
 ### Evolution of Project Decisions:
 
 -   **Initial Decision (2023-10-26)**: The project is officially defined as a new, unified application, building upon the principles of several existing PoCs rather than directly forking or merging them. The technology stack (Next.js, Convex, TypeScript, Tailwind) has been chosen.
+-   **Git Initialization (2023-10-26)**: The local Git repository has been initialized and the core Memory Bank documents have been committed.
