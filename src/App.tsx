@@ -5,6 +5,7 @@ import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
 import { useState } from "react";
 import ThoughtInbox from "./components/intake/ThoughtInbox";
 import ThoughtSubmission from "./components/intake/ThoughtSubmission";
+import EntityManager from "./components/memory/EntityManager";
 
 // For development - will show connection status  
 const convexUrl = import.meta.env.VITE_CONVEX_URL || "";
@@ -49,6 +50,7 @@ function AppContent() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-6">
             <ThoughtSubmission onSubmitted={handleThoughtSubmitted} />
+            <EntityManager />
           </div>
           
           <div className="space-y-6">

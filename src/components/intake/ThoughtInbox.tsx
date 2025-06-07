@@ -76,6 +76,10 @@ export default function ThoughtInbox() {
               
               {thought.augmented && (
                 <div className="mt-3 pt-3 border-t border-gray-100">
+                  <div className="mb-2">
+                    <p className="text-sm text-indigo-700 italic">{thought.augmented.augmentedContent}</p>
+                  </div>
+                  
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-xs font-medium text-blue-600">
                       Zone: {thought.augmented.zone}

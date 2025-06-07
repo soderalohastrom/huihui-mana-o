@@ -6,7 +6,7 @@ import { internal } from "./_generated/api";
 export const processThought = internalAction({
   args: {
     thoughtId: v.id("thoughts"),
-    userId: v.id("users"),
+    userId: v.string(),
   },
   handler: async (ctx, args) => {
     try {
@@ -25,19 +25,39 @@ export const processThought = internalAction({
         throw new Error("Thought not found");
       }
 
-      // Mock augmentation - in real implementation this would call OpenAI
-      const mockAugmented = await mockAugmentThought(thought.content);
+      // Use AI augmentation with fallback to mock
+      let augmented;
+      if (process.env.OPENAI_API_KEY) {
+        // Fetch entities and recent thoughts for AI context
+        const entities = await ctx.runQuery(internal.entities.getUserEntities, {
+          userId: args.userId,
+        });
+        const recentThoughts = await ctx.runQuery(internal.thoughts.getRecentThoughts, {
+          userId: args.userId,
+          limit: 5,
+        });
+        
+        augmented = await ctx.runAction(internal.ai.augmentation.augmentThoughtWithAI, {
+          thoughtId: args.thoughtId,
+          userId: args.userId,
+          content: thought.content,
+          entities,
+          recentThoughts,
+        });
+      } else {
+        augmented = await mockAugmentThought(thought.content);
+      }
 
       // Save augmented version
       await ctx.runMutation(internal.augmentation.saveAugmentedThought, {
         thoughtId: args.thoughtId,
         userId: args.userId,
         originalContent: thought.content,
-        augmentedContent: mockAugmented.content,
-        zone: mockAugmented.zone,
-        confidence: mockAugmented.confidence,
-        entities: mockAugmented.entities,
-        keywords: mockAugmented.keywords,
+        augmentedContent: augmented.content,
+        zone: augmented.zone,
+        confidence: augmented.confidence,
+        entities: augmented.entities,
+        keywords: augmented.keywords,
       });
 
       // Update thought status to completed
@@ -88,7 +108,7 @@ export const updateThoughtStatus = internalMutation({
 export const saveAugmentedThought = internalMutation({
   args: {
     thoughtId: v.id("thoughts"),
-    userId: v.id("users"),
+    userId: v.string(),
     originalContent: v.string(),
     augmentedContent: v.string(),
     zone: v.union(
@@ -120,7 +140,7 @@ export const saveAugmentedThought = internalMutation({
 });
 
 // Enhanced mock augmentation function - demonstrates Hawaiian Ahupuaʻa zones
-async function mockAugmentThought(content: string) {
+export async function mockAugmentThought(content: string) {
   const lowerContent = content.toLowerCase();
   
   // Ahupuaʻa zone classification with more sophisticated rules
