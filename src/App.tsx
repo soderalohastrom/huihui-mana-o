@@ -1,6 +1,6 @@
 import { ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
-import { ClerkProvider, useAuth, SignInButton, UserButton } from "@clerk/clerk-react";
+import { useAuth, SignInButton, UserButton } from "@clerk/clerk-react";
 import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
 import { useState } from "react";
 import ThoughtInbox from "./components/intake/ThoughtInbox";
@@ -70,36 +70,34 @@ function App() {
   }
 
   return (
-    <ClerkProvider publishableKey={clerkKey}>
-      <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-        <Authenticated>
-          <AppContent />
-        </Authenticated>
-        <Unauthenticated>
-          <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
-            <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
-              <h1 className="text-2xl font-bold text-gray-900 mb-4">Welcome to Hui Hui Manaʻo</h1>
-              <p className="text-gray-600 mb-6">
-                Sign in to start capturing and organizing your thoughts with Hawaiian Ahupuaʻa wisdom.
-              </p>
-              <SignInButton mode="modal">
-                <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                  Sign In with Google
-                </button>
-              </SignInButton>
-            </div>
+    <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
+      <Authenticated>
+        <AppContent />
+      </Authenticated>
+      <Unauthenticated>
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Welcome to Hui Hui Manaʻo</h1>
+            <p className="text-gray-600 mb-6">
+              Sign in to start capturing and organizing your thoughts with Hawaiian Ahupuaʻa wisdom.
+            </p>
+            <SignInButton mode="modal">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                Sign In with Google
+              </button>
+            </SignInButton>
           </div>
-        </Unauthenticated>
-        <AuthLoading>
-          <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
-            <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading...</p>
-            </div>
+        </div>
+      </Unauthenticated>
+      <AuthLoading>
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading...</p>
           </div>
-        </AuthLoading>
-      </ConvexProviderWithClerk>
-    </ClerkProvider>
+        </div>
+      </AuthLoading>
+    </ConvexProviderWithClerk>
   );
 }
 

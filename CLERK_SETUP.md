@@ -1,5 +1,7 @@
 # Clerk Authentication Setup Guide
 
+**Following [Clerk's Official React (Vite) Quickstart](https://clerk.com/docs/quickstarts/react)**
+
 ## 1. Create Clerk Application
 
 1. Go to [Clerk Dashboard](https://dashboard.clerk.com/)
@@ -7,7 +9,7 @@
 3. Choose "Google" as your OAuth provider
 4. Configure your application settings
 
-## 2. Configure JWT Template
+## 2. Configure JWT Template for Convex
 
 1. In Clerk Dashboard, go to **JWT Templates**
 2. Create a new template named **"convex"**
@@ -22,8 +24,8 @@ Add these to your `.env.local` file:
 VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 CLERK_SECRET_KEY=sk_test_...
 
-# Your Clerk frontend API URL (usually your-app.clerk.accounts.dev)
-VITE_CLERK_FRONTEND_API_URL=https://your-app.clerk.accounts.dev
+# Clerk issuer URL for Convex integration
+CLERK_ISSUER_URL=https://your-app.clerk.accounts.dev
 ```
 
 ## 4. Google OAuth Setup
