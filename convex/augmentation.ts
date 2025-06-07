@@ -1,5 +1,6 @@
 import { internalAction, internalMutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 
 // Mock augmentation for now - will be replaced with real AI later
 export const processThought = internalAction({
@@ -10,13 +11,13 @@ export const processThought = internalAction({
   handler: async (ctx, args) => {
     try {
       // Update thought status to processing
-      await ctx.runMutation("augmentation:updateThoughtStatus", {
+      await ctx.runMutation(internal.augmentation.updateThoughtStatus, {
         thoughtId: args.thoughtId,
         status: "processing",
       });
 
       // Get the thought content
-      const thought = await ctx.runQuery("augmentation:getThoughtInternal", {
+      const thought = await ctx.runQuery(internal.augmentation.getThoughtInternal, {
         thoughtId: args.thoughtId,
       });
 
@@ -28,7 +29,7 @@ export const processThought = internalAction({
       const mockAugmented = await mockAugmentThought(thought.content);
 
       // Save augmented version
-      await ctx.runMutation("augmentation:saveAugmentedThought", {
+      await ctx.runMutation(internal.augmentation.saveAugmentedThought, {
         thoughtId: args.thoughtId,
         userId: args.userId,
         originalContent: thought.content,
@@ -40,7 +41,7 @@ export const processThought = internalAction({
       });
 
       // Update thought status to completed
-      await ctx.runMutation("augmentation:updateThoughtStatus", {
+      await ctx.runMutation(internal.augmentation.updateThoughtStatus, {
         thoughtId: args.thoughtId,
         status: "completed",
       });
@@ -48,7 +49,7 @@ export const processThought = internalAction({
     } catch (error) {
       console.error("Error processing thought:", error);
       
-      await ctx.runMutation("augmentation:updateThoughtStatus", {
+      await ctx.runMutation(internal.augmentation.updateThoughtStatus, {
         thoughtId: args.thoughtId,
         status: "error",
         error: error instanceof Error ? error.message : "Unknown error",
