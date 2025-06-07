@@ -1,43 +1,68 @@
-# Active Context: Phase 2 - Clerk Authentication Integration
+# Active Context: Phase 4 - UI Enhancement & Viewport Optimization
 
-## 1. Current Focus: User Authentication & Personal Memory Graphs
+## 1. Current Focus: Card Flip UI & Full-Width Desktop Experience
 
-**Phase 1 is COMPLETE!** 🎉 The core pipeline is fully operational with live Convex backend. Now moving to **Phase 2**: implementing proper user authentication with Clerk and connecting memory graphs to individual users.
+**Phase 3 is COMPLETE!** 🎉 AI integration is fully operational with OpenAI GPT-4o-mini, Hawaiian cultural awareness, and memory context. Now working on **Phase 4**: advanced UI implementation with 3D card animations and optimized desktop layout.
 
-The immediate goal is to replace the development authentication bypass with real Clerk-based Google OAuth, enabling proper user-specific data isolation and personalized memory ecosystems.
+The immediate goal is to implement the original two-card flip metaphor vision and maximize viewport utilization for desktop users while maintaining responsive design.
 
-## 2. Implementation Progress
+## 2. Latest Session Progress (Current)
 
-✅ **Clerk React SDK**: Installed `@clerk/clerk-react` following official pattern  
-✅ **Official Integration**: ClerkProvider in main.tsx as per Clerk's React (Vite) guide  
-✅ **Convex Auth Config**: Fixed `convex/auth.config.ts` with correct `CLERK_ISSUER_URL`  
-✅ **Environment Variables**: Corrected to use official Clerk naming convention  
-✅ **React Providers**: Proper `ConvexProviderWithClerk` + `ClerkProvider` integration  
-✅ **Authentication UI**: Added sign-in modal and UserButton components  
-✅ **Auth Requirements**: Removed dev bypass, all functions require authentication  
-✅ **Documentation**: Updated `CLERK_SETUP.md` with official guidance  
+✅ **TypeScript Resolution**: Fixed 6 compilation errors in ai/augmentation.ts  
+✅ **User ID Validation**: Updated all validators from `v.id("users")` to `v.string()` for Clerk compatibility  
+✅ **Documentation Enhancement**: Updated both CLERK_SETUP.md and CONVEX_SETUP.md with real learnings  
+✅ **Card Flip UI**: Implemented 3D flip animation with CSS transforms on `feature/card-flip-ui` branch  
+✅ **Layout Optimization**: Attempted full-width viewport expansion (max-w-7xl → w-full)  
 
-## 3. Status: CLERK AUTHENTICATION ACTIVATED! 🎉
+## 3. Card Flip Implementation Details
 
-✅ **Clerk Credentials**: Live publishable key configured  
-✅ **Issuer URL**: Frontend API properly connected at [ideal-muskox-56.clerk.accounts.dev](https://ideal-muskox-56.clerk.accounts.dev)  
-✅ **JWKS Verified**: [Public keys accessible](https://ideal-muskox-56.clerk.accounts.dev/.well-known/jwks.json)  
-✅ **Application Running**: Frontend + Backend operational on localhost:5175  
+**Technical Implementation**:
+- **ThoughtCard.tsx**: 3D flip animation with CSS transforms (perspective-1000, backface-hidden, rotate-y-180)
+- **Front Side**: Raw thought with Kalam handwriting font, minimal design
+- **Back Side**: Zone-colored gradients (Mauka/Kula/Makai/Kapu), AI insights, confidence meters, entity tags
+- **Grid Enhancement**: Added xl:grid-cols-4 2xl:grid-cols-5 for wide screens
+- **Typography**: Added Kalam Google Font for handwriting effect
+- **Metaphor**: Renamed to "Thought Garden" with Hawaiian gardening theme
 
-## 4. Next Immediate Steps
+## 4. ACTIVE CHALLENGE: Viewport Width Issue ⚠️
 
-1.  **🔄 ACTIVE: Test Google OAuth**: Verify sign-in flow works end-to-end
-2.  **Create JWT Template**: Set up "convex" template in Clerk dashboard if needed
-3.  **Test User-Specific Data**: Verify thoughts are properly isolated per user
-4.  **Add Google OAuth Provider**: Configure in Clerk dashboard if not already done
-5.  **Update Memory Bank**: Document successful authentication integration
+**Problem**: Despite removing max-width constraints and implementing full-width layout, the viewport still appears constrained on desktop.
 
-## 3. Key Decisions & Considerations
+**Attempted Solutions**:
+- Changed `max-w-7xl mx-auto` to `w-full` in App.tsx header and main
+- Updated padding from `px-6` to `px-8` for better edge spacing
+- Enhanced responsive grid to include `xl:grid-cols-4 2xl:grid-cols-5`
+- Fixed all loading screens to use consistent full-width layout
 
--   **Keep it Simple**: For this initial phase, we are not implementing any complex UI from `Tab-Magic` or `Drag-drop-simple`. The presentation layer will be a simple, unstyled list of thoughts to verify the real-time pipeline is working.
--   **Mock Augmentation**: The initial version of the `agent.enrich` action can use a simple mock function (e.g., appending a timestamp or a static string to the thought) to simulate the augmentation process. We will integrate with a real LLM in a later phase.
--   **Focus on the "Happy Path"**: We are currently focused on the successful flow of data. Error handling and edge cases will be addressed after the core pipeline is validated.
+**Status**: Changes implemented but user reports viewport still not expanding properly.
 
-## 4. State of PoCs
+## 5. Next Immediate Steps
 
-The various Proof-of-Concept projects (`send-to-convex`, `teleport-note`, etc.) are to be used as **reference implementations only**. We are not directly importing their code but are re-implementing their core logic within the new, unified architecture.
+1. **🔄 URGENT: Diagnose Viewport Issue**: Investigate why full-width changes aren't taking effect
+2. **CSS Debugging**: Check for conflicting styles or container constraints
+3. **Browser Testing**: Test across different browsers and screen sizes
+4. **Alternative Approaches**: Consider CSS Grid, Flexbox, or viewport units (vw/vh)
+5. **Component Hierarchy**: Review if any parent containers are still constraining width
+
+## 6. Technical Architecture Status
+
+**Current Stack**: Vite + React + TypeScript + Tailwind CSS + Convex + Clerk + OpenAI  
+**Authentication**: Google OAuth through Clerk with string-based user IDs  
+**AI**: OpenAI GPT-4o-mini with Hawaiian cultural awareness and memory context  
+**UI**: 3D card flip animations with zone-specific gradient colors  
+**Layout**: Attempting full-width stacked desktop experience with responsive design  
+**Data Flow**: Real-time capture → AI augmentation → user-specific presentation  
+
+## 7. Branch Status
+
+- **main**: Stable with basic functionality
+- **feature/card-flip-ui**: Active development branch with latest UI enhancements
+- **Ready for Testing**: http://localhost:5173 when Convex dev server running
+
+## 8. Key Decisions & Considerations
+
+- **Card Metaphor**: Successfully implemented original two-card flip vision
+- **Responsive Design**: Maintained mobile-first approach while optimizing for desktop
+- **Hawaiian Integration**: AI system incorporates cultural context and Ahupuaʻa principles
+- **Real-time Updates**: Live updates without page refresh using Convex subscriptions
+- **User Experience**: Focus on magical, intuitive interactions with smooth animations
