@@ -23,7 +23,7 @@ function AppContent() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
       <header className="bg-white bg-opacity-80 backdrop-blur-sm border-b border-white border-opacity-20 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="w-full px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
@@ -53,8 +53,8 @@ function AppContent() {
         </div>
       </header>
 
-      {/* Main Content - Stacked Layout */}
-      <main className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      {/* Main Content - Full Width Stacked Layout */}
+      <main className="w-full px-8 py-8 space-y-8">
         {/* 1. Capture Your Thought */}
         <section className="w-full">
           <ThoughtSubmission onSubmitted={handleThoughtSubmitted} />
@@ -77,7 +77,7 @@ function AppContent() {
 function App() {
   if (!convex || !clerkKey) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-8">
         <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Setup Required</h1>
           <p className="text-gray-600 mb-4">
@@ -98,7 +98,7 @@ function App() {
         <AppContent />
       </Authenticated>
       <Unauthenticated>
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-8">
           <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Welcome to Hui Hui Manaʻo</h1>
             <p className="text-gray-600 mb-6">
@@ -113,7 +113,7 @@ function App() {
         </div>
       </Unauthenticated>
       <AuthLoading>
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-8">
           <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
             <p className="text-gray-600 mb-4">Loading...</p>

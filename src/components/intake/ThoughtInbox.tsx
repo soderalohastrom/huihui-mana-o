@@ -11,7 +11,7 @@ export default function ThoughtInbox() {
         <h2 className="text-xl font-semibold text-gray-900 mb-6">
           🌺 Thought Garden
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="h-64 bg-gray-200 rounded-xl animate-pulse"></div>
           ))}
@@ -54,7 +54,7 @@ export default function ThoughtInbox() {
           <p className="text-sm text-gray-500 mt-2">Plant your first thought above!</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
           {thoughts.map((thought) => (
             <ThoughtCard
               key={thought._id}
