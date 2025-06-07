@@ -1,0 +1,8 @@
+{
+  "node": {
+    "version": "20"
+  },
+  "generateCommonJSApi": false,
+  "functions": "convex/",
+  "ignoreDependencies": []
+}
