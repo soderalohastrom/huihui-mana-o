@@ -1,24 +1,29 @@
-# Active Context: Foundational Build Kick-off
+# Active Context: Phase 2 - Clerk Authentication Integration
 
-## 1. Current Focus: Phase 1 - Core Pipeline Implementation
+## 1. Current Focus: User Authentication & Personal Memory Graphs
 
-The immediate goal is to build the foundational, end-to-end pipeline for **Hui Hui Manaʻo**. This involves creating a minimal, yet fully functional, version of the `Capture -> Augment -> Present` data flow.
+**Phase 1 is COMPLETE!** 🎉 The core pipeline is fully operational with live Convex backend. Now moving to **Phase 2**: implementing proper user authentication with Clerk and connecting memory graphs to individual users.
 
-All efforts are currently directed at the tasks outlined in the **Phase 1 Implementation Plan** within the [`systemPatterns.md`](memory-bank/systemPatterns.md:1) document.
+The immediate goal is to replace the development authentication bypass with real Clerk-based Google OAuth, enabling proper user-specific data isolation and personalized memory ecosystems.
 
-## 2. Next Immediate Steps
+## 2. Implementation Progress
 
-1.  **Initialize Project**: Set up the Next.js + Convex + TypeScript + Tailwind CSS project structure.
-2.  **Define Schema**: Create the initial `thoughts` table in [`convex/schema.ts`](convex/schema.ts:1).
-3.  **Implement Capture**:
-    -   Write the `thoughts.create` mutation in Convex.
-    -   Create the `/api/injest` Next.js API route to call this mutation.
-4.  **Implement Augment**:
-    -   Write the `agent.enrich` action in Convex.
-    -   Ensure the `thoughts.create` mutation schedules this action.
-5.  **Implement Present**:
-    -   Write the `thoughts.list` query in Convex.
-    -   Create a basic React component that uses `useQuery` to display the results in real-time.
+✅ **Clerk React SDK**: Installed `@clerk/clerk-react`  
+✅ **Convex Auth Config**: Created `convex/auth.config.ts` with Clerk domain  
+✅ **Environment Variables**: Added Clerk placeholders to `.env.local`  
+✅ **React Providers**: Updated to use `ConvexProviderWithClerk` with `useAuth`  
+✅ **Authentication UI**: Added sign-in modal and UserButton components  
+✅ **Auth Requirements**: Removed dev bypass, all functions require authentication  
+✅ **Documentation**: Created `CLERK_SETUP.md` with complete setup guide  
+
+## 3. Next Immediate Steps
+
+1.  **🔄 ACTIVE: Add Clerk Credentials**: Get keys from Clerk Dashboard
+2.  **Create Clerk Application**: Set up new app with Google OAuth provider  
+3.  **Configure JWT Template**: Create "convex" template in Clerk dashboard
+4.  **Test Authentication Flow**: Verify Google OAuth sign-in works
+5.  **Test User-Specific Data**: Verify thoughts are properly isolated per user
+6.  **Update Memory Bank**: Document successful authentication integration
 
 ## 3. Key Decisions & Considerations
 

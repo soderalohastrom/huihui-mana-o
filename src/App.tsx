@@ -1,10 +1,14 @@
-import { ConvexProvider, ConvexReactClient } from "convex/react";
+import { ConvexReactClient } from "convex/react";
+import { ConvexProviderWithClerk } from "convex/react-clerk";
+import { ClerkProvider, useAuth, SignInButton, UserButton } from "@clerk/clerk-react";
+import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
 import { useState } from "react";
 import ThoughtInbox from "./components/intake/ThoughtInbox";
 import ThoughtSubmission from "./components/intake/ThoughtSubmission";
 
 // For development - will show connection status  
 const convexUrl = import.meta.env.VITE_CONVEX_URL || "";
+const clerkKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || "";
 const convex = convexUrl ? new ConvexReactClient(convexUrl) : null;
 
 function AppContent() {
@@ -25,9 +29,10 @@ function AppContent() {
             Unified thought capture and organization system
           </p>
           <div className="flex items-center justify-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${convexUrl ? 'bg-yellow-500' : 'bg-red-500'}`}></div>
+            <UserButton />
+            <div className={`w-2 h-2 rounded-full ${convexUrl ? 'bg-green-500' : 'bg-red-500'}`}></div>
             <span className="text-xs text-gray-500">
-              {convexUrl ? 'Convex: Connecting...' : 'Convex: Not configured'}
+              {convexUrl ? 'Convex: Connected' : 'Convex: Not configured'}
             </span>
           </div>
         </header>
@@ -47,26 +52,54 @@ function AppContent() {
 }
 
 function App() {
-  if (!convex) {
+  if (!convex || !clerkKey) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
         <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Convex Setup Required</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Setup Required</h1>
           <p className="text-gray-600 mb-4">
-            Please configure your Convex deployment to use the full application.
+            Please configure your Convex deployment and Clerk authentication.
           </p>
-          <p className="text-sm text-gray-500">
-            Set VITE_CONVEX_URL in your .env.local file
-          </p>
+          <div className="text-sm text-gray-500 space-y-1">
+            <p>Set VITE_CONVEX_URL in your .env.local file</p>
+            <p>Set VITE_CLERK_PUBLISHABLE_KEY in your .env.local file</p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <ConvexProvider client={convex}>
-      <AppContent />
-    </ConvexProvider>
+    <ClerkProvider publishableKey={clerkKey}>
+      <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
+        <Authenticated>
+          <AppContent />
+        </Authenticated>
+        <Unauthenticated>
+          <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
+            <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">Welcome to Hui Hui Manaʻo</h1>
+              <p className="text-gray-600 mb-6">
+                Sign in to start capturing and organizing your thoughts with Hawaiian Ahupuaʻa wisdom.
+              </p>
+              <SignInButton mode="modal">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                  Sign In with Google
+                </button>
+              </SignInButton>
+            </div>
+          </div>
+        </Unauthenticated>
+        <AuthLoading>
+          <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
+            <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading...</p>
+            </div>
+          </div>
+        </AuthLoading>
+      </ConvexProviderWithClerk>
+    </ClerkProvider>
   );
 }
 

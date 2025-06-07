@@ -17,21 +17,10 @@ export const submitThought = mutation({
     }),
   },
   handler: async (ctx, args) => {
-    let userId = await getAuthUserId(ctx);
+    const userId = await getAuthUserId(ctx);
     
-    // Development mode: create temporary user if none exists
     if (!userId) {
-      const existingUser = await ctx.db.query("users").first();
-      if (!existingUser) {
-        userId = await ctx.db.insert("users", {
-          name: "Dev User",
-          email: "dev@huihui.local",
-          emailVerificationTime: Date.now(),
-          image: "",
-        });
-      } else {
-        userId = existingUser._id;
-      }
+      throw new Error("Authentication required");
     }
 
     // Validate content
@@ -78,16 +67,10 @@ export const submitBatch = mutation({
     source: v.string(),
   },
   handler: async (ctx, args) => {
-    let userId = await getAuthUserId(ctx);
+    const userId = await getAuthUserId(ctx);
     
-    // Development mode: use first user if no auth
     if (!userId) {
-      const existingUser = await ctx.db.query("users").first();
-      if (existingUser) {
-        userId = existingUser._id;
-      } else {
-        throw new Error("No users found - run submitThought first");
-      }
+      throw new Error("Authentication required");
     }
 
     const thoughtIds = [];
@@ -142,11 +125,9 @@ export const submitBatch = mutation({
 export const getPendingThoughts = query({
   args: {},
   handler: async (ctx) => {
-    let userId = await getAuthUserId(ctx);
+    const userId = await getAuthUserId(ctx);
     if (!userId) {
-      const existingUser = await ctx.db.query("users").first();
-      if (!existingUser) return [];
-      userId = existingUser._id;
+      throw new Error("Authentication required");
     }
 
     return await ctx.db
@@ -166,11 +147,9 @@ export const getThoughtsWithAugmentation = query({
     zone: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    let userId = await getAuthUserId(ctx);
+    const userId = await getAuthUserId(ctx);
     if (!userId) {
-      const existingUser = await ctx.db.query("users").first();
-      if (!existingUser) return [];
-      userId = existingUser._id;
+      throw new Error("Authentication required");
     }
 
     const limit = args.limit || 100;
@@ -209,11 +188,9 @@ export const getThoughtsWithAugmentation = query({
 export const getIntakeStats = query({
   args: {},
   handler: async (ctx) => {
-    let userId = await getAuthUserId(ctx);
+    const userId = await getAuthUserId(ctx);
     if (!userId) {
-      const existingUser = await ctx.db.query("users").first();
-      if (!existingUser) return null;
-      userId = existingUser._id;
+      throw new Error("Authentication required");
     }
 
     const thoughts = await ctx.db
