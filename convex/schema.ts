@@ -13,7 +13,7 @@ const ahupuaaZone = v.union(
 const applicationTables = {
   // Raw thoughts as they come in
   thoughts: defineTable({
-    userId: v.id("users"),
+    userId: v.string(), // Clerk user ID
     content: v.string(),
     source: v.string(), // "web", "mobile", "voice", "api"
     metadata: v.object({
@@ -39,7 +39,7 @@ const applicationTables = {
   // Augmented thoughts with memory context
   augmentedThoughts: defineTable({
     thoughtId: v.id("thoughts"),
-    userId: v.id("users"),
+    userId: v.string(), // Clerk user ID
     originalContent: v.string(),
     augmentedContent: v.string(),
     zone: ahupuaaZone,
@@ -62,7 +62,7 @@ const applicationTables = {
 
   // Memory graph entities
   entities: defineTable({
-    userId: v.id("users"),
+    userId: v.string(), // Clerk user ID
     name: v.string(),
     type: v.string(), // "person", "place", "project", etc.
     description: v.string(),
@@ -82,7 +82,7 @@ const applicationTables = {
 
   // Relationships between entities
   relationships: defineTable({
-    userId: v.id("users"),
+    userId: v.string(), // Clerk user ID
     fromEntity: v.id("entities"),
     toEntity: v.id("entities"),
     type: v.string(), // "owns", "likes", "works_with", etc.
@@ -97,7 +97,7 @@ const applicationTables = {
 
   // Hui (groups) for organizing thoughts
   hui: defineTable({
-    userId: v.id("users"),
+    userId: v.string(), // Clerk user ID
     name: v.string(),
     emoji: v.string(),
     zone: ahupuaaZone,
@@ -115,7 +115,7 @@ const applicationTables = {
 
   // Agent memory patterns for learning
   agentPatterns: defineTable({
-    userId: v.id("users"),
+    userId: v.string(), // Clerk user ID
     pattern: v.string(),
     zoneRules: v.array(v.object({
       keywords: v.array(v.string()),
@@ -137,7 +137,7 @@ const applicationTables = {
 
   // Intake logs for debugging and analytics
   intakeLogs: defineTable({
-    userId: v.optional(v.id("users")),
+    userId: v.optional(v.string()), // Clerk user ID
     source: v.string(),
     timestamp: v.number(),
     success: v.boolean(),

@@ -1,6 +1,6 @@
 import { ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
-import { useAuth, SignInButton, UserButton } from "@clerk/clerk-react";
+import { useAuth, SignInButton, SignOutButton, UserButton } from "@clerk/clerk-react";
 import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
 import { useState } from "react";
 import ThoughtInbox from "./components/intake/ThoughtInbox";
@@ -28,12 +28,21 @@ function AppContent() {
           <p className="text-gray-600 mb-2">
             Unified thought capture and organization system
           </p>
-          <div className="flex items-center justify-center gap-2">
-            <UserButton />
-            <div className={`w-2 h-2 rounded-full ${convexUrl ? 'bg-green-500' : 'bg-red-500'}`}></div>
-            <span className="text-xs text-gray-500">
-              {convexUrl ? 'Convex: Connected' : 'Convex: Not configured'}
-            </span>
+          <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center gap-2">
+              <UserButton />
+              <SignOutButton>
+                <button className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded transition-colors">
+                  Sign Out
+                </button>
+              </SignOutButton>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className={`w-2 h-2 rounded-full ${convexUrl ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              <span className="text-xs text-gray-500">
+                {convexUrl ? 'Convex: Connected' : 'Convex: Not configured'}
+              </span>
+            </div>
           </div>
         </header>
 
@@ -93,7 +102,12 @@ function App() {
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
           <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading...</p>
+            <p className="text-gray-600 mb-4">Loading...</p>
+            <SignOutButton>
+              <button className="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1 rounded transition-colors">
+                Sign Out (if stuck)
+              </button>
+            </SignOutButton>
           </div>
         </div>
       </AuthLoading>
