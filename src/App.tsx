@@ -20,44 +20,56 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <div className="max-w-4xl mx-auto">
-        <header className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Hui Hui Manaʻo
-          </h1>
-          <p className="text-gray-600 mb-2">
-            Unified thought capture and organization system
-          </p>
-          <div className="flex items-center justify-center gap-4">
-            <div className="flex items-center gap-2">
-              <UserButton />
-              <SignOutButton>
-                <button className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded transition-colors">
-                  Sign Out
-                </button>
-              </SignOutButton>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Header */}
+      <header className="bg-white bg-opacity-80 backdrop-blur-sm border-b border-white border-opacity-20 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Hui Hui Manaʻo
+              </h1>
+              <p className="text-sm text-gray-600">
+                Unified thought capture and organization system
+              </p>
             </div>
-            <div className="flex items-center gap-1">
-              <div className={`w-2 h-2 rounded-full ${convexUrl ? 'bg-green-500' : 'bg-red-500'}`}></div>
-              <span className="text-xs text-gray-500">
-                {convexUrl ? 'Convex: Connected' : 'Convex: Not configured'}
-              </span>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1">
+                <div className={`w-2 h-2 rounded-full ${convexUrl ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                <span className="text-xs text-gray-500">
+                  {convexUrl ? 'Convex: Connected' : 'Convex: Not configured'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <UserButton />
+                <SignOutButton>
+                  <button className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1.5 rounded transition-colors">
+                    Sign Out
+                  </button>
+                </SignOutButton>
+              </div>
             </div>
-          </div>
-        </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="space-y-6">
-            <ThoughtSubmission onSubmitted={handleThoughtSubmitted} />
-            <EntityManager />
-          </div>
-          
-          <div className="space-y-6">
-            <ThoughtInbox key={refreshKey} />
           </div>
         </div>
-      </div>
+      </header>
+
+      {/* Main Content - Stacked Layout */}
+      <main className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        {/* 1. Capture Your Thought */}
+        <section className="w-full">
+          <ThoughtSubmission onSubmitted={handleThoughtSubmitted} />
+        </section>
+
+        {/* 2. Thought Garden */}
+        <section className="w-full">
+          <ThoughtInbox key={refreshKey} />
+        </section>
+
+        {/* 3. Memory Graph Entities */}
+        <section className="w-full">
+          <EntityManager />
+        </section>
+      </main>
     </div>
   );
 }
