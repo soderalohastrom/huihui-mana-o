@@ -1,51 +1,39 @@
 import { useState } from "react";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { mockAugmentThought, type DemoThought } from "../../lib/demoData";
 
 interface Props {
-  onSubmitted?: () => void;
+  onSubmitted?: (newThought: DemoThought) => void;
 }
 
-export default function ThoughtSubmission({ onSubmitted }: Props) {
+export default function DemoThoughtSubmission({ onSubmitted }: Props) {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const submitThought = useMutation(api.intake.submitThought);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim() || isSubmitting) return;
 
     setIsSubmitting(true);
+    
     try {
-      await submitThought({
+      // Simulate processing delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const augmentation = mockAugmentThought(content.trim());
+      
+      const newThought: DemoThought = {
+        _id: `demo-${Date.now()}`,
         content: content.trim(),
-        source: "web",
-        metadata: {
-          timestamp: Date.now(),
-        },
-      });
+        status: "completed",
+        metadata: { timestamp: Date.now() },
+        augmented: augmentation
+      };
       
       setContent("");
-      onSubmitted?.();
+      onSubmitted?.(newThought);
     } catch (error) {
-      console.error("Error submitting thought:", error);
-      
-      // More user-friendly error handling
-      let errorMessage = "Unable to capture thought. ";
-      if (error instanceof Error) {
-        if (error.message.includes("network") || error.message.includes("fetch")) {
-          errorMessage += "Please check your connection and try again.";
-        } else if (error.message.includes("authentication") || error.message.includes("auth")) {
-          errorMessage += "Authentication issue - please refresh the page.";
-        } else {
-          errorMessage += error.message;
-        }
-      } else {
-        errorMessage += "Please try again.";
-      }
-      
-      // You could replace this with a toast notification
-      alert(errorMessage);
+      console.error("Demo error:", error);
+      alert("Demo mode error - please try again");
     } finally {
       setIsSubmitting(false);
     }
@@ -55,6 +43,7 @@ export default function ThoughtSubmission({ onSubmitted }: Props) {
     <div className="bg-white rounded-lg shadow-md p-6">
       <h2 className="text-xl font-semibold text-gray-900 mb-4">
         Capture Your Thoughts
+        <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">DEMO</span>
       </h2>
       
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -66,7 +55,7 @@ export default function ThoughtSubmission({ onSubmitted }: Props) {
             id="thought-content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="What's on your mind?"
+            placeholder="What's on your mind? (Try words like 'dream', 'task', 'feel', or 'personal' to see zone classification)"
             className="w-full h-32 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
             disabled={isSubmitting}
           />
@@ -77,9 +66,19 @@ export default function ThoughtSubmission({ onSubmitted }: Props) {
           disabled={!content.trim() || isSubmitting}
           className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {isSubmitting ? "Submitting..." : "Capture Thought"}
+          {isSubmitting ? "Processing..." : "Capture Thought"}
         </button>
       </form>
+      
+      <div className="mt-4 text-xs text-gray-500 border-t pt-4">
+        <p className="font-medium mb-2">🌺 Ahupuaʻa Zones:</p>
+        <div className="grid grid-cols-2 gap-2">
+          <div>🌋 Mauka - Visionary</div>
+          <div>🌱 Kula - Practical</div>
+          <div>🌊 Makai - Emotional</div>
+          <div>🌫️ Kapu - Sacred</div>
+        </div>
+      </div>
     </div>
   );
 }

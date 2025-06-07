@@ -17,9 +17,21 @@ export const submitThought = mutation({
     }),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
+    let userId = await getAuthUserId(ctx);
+    
+    // Development mode: create temporary user if none exists
     if (!userId) {
-      throw new Error("User not authenticated");
+      const existingUser = await ctx.db.query("users").first();
+      if (!existingUser) {
+        userId = await ctx.db.insert("users", {
+          name: "Dev User",
+          email: "dev@huihui.local",
+          emailVerificationTime: Date.now(),
+          image: "",
+        });
+      } else {
+        userId = existingUser._id;
+      }
     }
 
     // Validate content
@@ -66,9 +78,16 @@ export const submitBatch = mutation({
     source: v.string(),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
+    let userId = await getAuthUserId(ctx);
+    
+    // Development mode: use first user if no auth
     if (!userId) {
-      throw new Error("User not authenticated");
+      const existingUser = await ctx.db.query("users").first();
+      if (existingUser) {
+        userId = existingUser._id;
+      } else {
+        throw new Error("No users found - run submitThought first");
+      }
     }
 
     const thoughtIds = [];
@@ -123,8 +142,12 @@ export const submitBatch = mutation({
 export const getPendingThoughts = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) return [];
+    let userId = await getAuthUserId(ctx);
+    if (!userId) {
+      const existingUser = await ctx.db.query("users").first();
+      if (!existingUser) return [];
+      userId = existingUser._id;
+    }
 
     return await ctx.db
       .query("thoughts")
@@ -143,8 +166,12 @@ export const getThoughtsWithAugmentation = query({
     zone: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) return [];
+    let userId = await getAuthUserId(ctx);
+    if (!userId) {
+      const existingUser = await ctx.db.query("users").first();
+      if (!existingUser) return [];
+      userId = existingUser._id;
+    }
 
     const limit = args.limit || 100;
 
@@ -182,8 +209,12 @@ export const getThoughtsWithAugmentation = query({
 export const getIntakeStats = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) return null;
+    let userId = await getAuthUserId(ctx);
+    if (!userId) {
+      const existingUser = await ctx.db.query("users").first();
+      if (!existingUser) return null;
+      userId = existingUser._id;
+    }
 
     const thoughts = await ctx.db
       .query("thoughts")

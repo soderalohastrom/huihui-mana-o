@@ -118,40 +118,91 @@ export const saveAugmentedThought = internalMutation({
   },
 });
 
-// Mock augmentation function - replace with real AI later
+// Enhanced mock augmentation function - demonstrates Hawaiian Ahupuaʻa zones
 async function mockAugmentThought(content: string) {
-  // Simple mock logic for demonstration
   const lowerContent = content.toLowerCase();
   
+  // Ahupuaʻa zone classification with more sophisticated rules
   let zone: "mauka" | "kula" | "makai" | "kapu" = "kula";
-  if (lowerContent.includes("dream") || lowerContent.includes("vision") || lowerContent.includes("goal")) {
-    zone = "mauka";
-  } else if (lowerContent.includes("feel") || lowerContent.includes("emotion") || lowerContent.includes("love")) {
-    zone = "makai";
-  } else if (lowerContent.includes("private") || lowerContent.includes("secret") || lowerContent.includes("personal")) {
-    zone = "kapu";
+  let confidence = 0.6;
+  
+  // Mauka 🌋 - Mountain/Visionary: big ideas, dreams, aspirations, strategy
+  const maukaKeywords = ["dream", "vision", "goal", "future", "strategy", "big picture", "inspire", "imagine", "create", "invent", "innovate", "transform", "revolution", "breakthrough"];
+  const maukaCount = maukaKeywords.filter(word => lowerContent.includes(word)).length;
+  
+  // Kula 🌱 - Plains/Practical: tasks, actions, work, implementation
+  const kulaKeywords = ["do", "task", "work", "complete", "finish", "build", "implement", "execute", "plan", "organize", "manage", "schedule", "deadline", "project"];
+  const kulaCount = kulaKeywords.filter(word => lowerContent.includes(word)).length;
+  
+  // Makai 🌊 - Ocean/Emotional: feelings, relationships, connections
+  const makaiKeywords = ["feel", "emotion", "love", "friend", "family", "relationship", "connect", "share", "care", "support", "empathy", "heart", "soul", "experience"];
+  const makaiCount = makaiKeywords.filter(word => lowerContent.includes(word)).length;
+  
+  // Kapu 🌫️ - Sacred/Protected: private, sensitive, personal growth
+  const kapuKeywords = ["private", "secret", "personal", "sensitive", "sacred", "spiritual", "inner", "reflection", "meditation", "growth", "healing", "vulnerable"];
+  const kapuCount = kapuKeywords.filter(word => lowerContent.includes(word)).length;
+  
+  // Determine zone based on keyword frequency
+  const zoneCounts = {
+    mauka: maukaCount,
+    kula: kulaCount, 
+    makai: makaiCount,
+    kapu: kapuCount
+  };
+  
+  const maxCount = Math.max(...Object.values(zoneCounts));
+  if (maxCount > 0) {
+    zone = Object.keys(zoneCounts).find(key => zoneCounts[key as keyof typeof zoneCounts] === maxCount) as typeof zone;
+    confidence = Math.min(0.95, 0.5 + (maxCount * 0.15));
   }
-
+  
+  // Extract meaningful keywords (filter out common words)
+  const stopWords = new Set(["the", "and", "or", "but", "in", "on", "at", "to", "for", "of", "with", "by", "from", "up", "about", "into", "through", "during", "before", "after", "above", "below", "between"]);
   const keywords = content
     .split(/\s+/)
-    .filter(word => word.length > 3)
-    .slice(0, 5);
+    .map(word => word.replace(/[^\w]/g, '').toLowerCase())
+    .filter(word => word.length > 3 && !stopWords.has(word))
+    .slice(0, 6);
 
+  // Enhanced entity extraction
   const entities = [];
-  // Simple entity extraction - look for capitalized words
-  const capitalizedWords = content.match(/\b[A-Z][a-z]+\b/g) || [];
-  for (const word of capitalizedWords.slice(0, 3)) {
+  
+  // Look for capitalized words (potential proper nouns)
+  const capitalizedWords = content.match(/\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/g) || [];
+  for (const phrase of capitalizedWords.slice(0, 4)) {
+    const entityType = phrase.length > 10 ? "organization" : 
+                      phrase.includes(" ") ? "person" : "concept";
     entities.push({
-      name: word,
-      type: "unknown",
+      name: phrase,
+      type: entityType,
       isNew: true,
     });
   }
+  
+  // Look for common entity patterns
+  if (content.match(/@\w+/)) {
+    const mentions = content.match(/@\w+/g) || [];
+    mentions.forEach(mention => {
+      entities.push({
+        name: mention,
+        type: "person",
+        isNew: true,
+      });
+    });
+  }
+
+  // Zone-specific augmentation messages
+  const zoneMessages = {
+    mauka: "🌋 Visionary thought - aims high toward the mountain of possibility",
+    kula: "🌱 Practical thought - grows in the fertile plains of action", 
+    makai: "🌊 Emotional thought - flows from the depths of human connection",
+    kapu: "🌫️ Sacred thought - protected in the mists of inner wisdom"
+  };
 
   return {
-    content: `Enhanced: ${content} [Zone: ${zone}]`,
+    content: `${zoneMessages[zone]}: ${content}`,
     zone,
-    confidence: 0.8,
+    confidence,
     entities,
     keywords,
   };

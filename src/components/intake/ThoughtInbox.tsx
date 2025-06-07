@@ -15,6 +15,22 @@ export default function ThoughtInbox() {
             <div key={i} className="h-24 bg-gray-200 rounded"></div>
           ))}
         </div>
+        <p className="text-xs text-gray-500 mt-4">Loading thoughts...</p>
+      </div>
+    );
+  }
+
+  if (thoughts === null) {
+    return (
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          Thought Inbox
+        </h2>
+        <div className="text-center py-8">
+          <div className="text-red-500 mb-2">⚠️</div>
+          <p className="text-gray-600">Unable to connect to the thought system.</p>
+          <p className="text-sm text-gray-500 mt-1">Please check your connection and refresh the page.</p>
+        </div>
       </div>
     );
   }
