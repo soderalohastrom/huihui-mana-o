@@ -54,21 +54,28 @@ function AppContent() {
       </header>
 
       {/* Main Content - Full Width Stacked Layout */}
-      <main className="w-full px-8 py-8 space-y-8">
-        {/* 1. Capture Your Thought */}
-        <section className="w-full">
-          <ThoughtSubmission onSubmitted={handleThoughtSubmitted} />
-        </section>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column */}
+          <div className="lg:col-span-1 space-y-8">
+            <section>
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">1. Capture Your Thought</h2>
+              <ThoughtSubmission onSubmitted={handleThoughtSubmitted} />
+            </section>
+            <section>
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">3. Memory Graph Entities</h2>
+              <EntityManager />
+            </section>
+          </div>
 
-        {/* 2. Thought Garden */}
-        <section className="w-full">
-          <ThoughtInbox key={refreshKey} />
-        </section>
-
-        {/* 3. Memory Graph Entities */}
-        <section className="w-full">
-          <EntityManager />
-        </section>
+          {/* Right Column */}
+          <div className="lg:col-span-2">
+            <section>
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">2. Thought Garden</h2>
+              <ThoughtInbox key={refreshKey} />
+            </section>
+          </div>
+        </div>
       </main>
     </div>
   );
