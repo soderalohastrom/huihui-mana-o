@@ -1,9 +1,12 @@
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import ThoughtCard from "./ThoughtCard";
+import { useState } from "react";
+import { AnimatePresence } from "framer-motion";
 
 export default function ThoughtInbox() {
   const thoughts = useQuery(api.intake.getThoughtsWithAugmentation, { limit: 20 });
+  const [editMode, setEditMode] = useState(false);
 
   if (thoughts === undefined) {
     return (
@@ -11,7 +14,7 @@ export default function ThoughtInbox() {
         <h2 className="text-xl font-semibold text-gray-900 mb-6">
           🌺 Thought Garden
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="h-64 bg-gray-200 rounded-xl animate-pulse"></div>
           ))}
@@ -42,8 +45,16 @@ export default function ThoughtInbox() {
         <h2 className="text-xl font-semibold text-gray-900">
           🌺 Thought Garden
         </h2>
-        <div className="text-sm text-gray-500">
-          {thoughts.length} thought{thoughts.length !== 1 ? 's' : ''} growing
+        <div className="flex items-center gap-4">
+          <div className="text-sm text-gray-500">
+            {thoughts.length} thought{thoughts.length !== 1 ? 's' : ''} growing
+          </div>
+          <button
+            onClick={() => setEditMode(!editMode)}
+            className="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
+          >
+            {editMode ? 'Done' : 'Edit'}
+          </button>
         </div>
       </div>
       
@@ -54,28 +65,31 @@ export default function ThoughtInbox() {
           <p className="text-sm text-gray-500 mt-2">Plant your first thought above!</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-          {thoughts.map((thought) => (
-            <ThoughtCard
-              key={thought._id}
-              thought={{
-                _id: thought._id,
-                content: thought.content,
-                _creationTime: thought.metadata.timestamp,
-                augmented: thought.augmented ? {
-                  content: thought.augmented.augmentedContent,
-                  zone: thought.augmented.zone,
-                  confidence: thought.augmented.confidence,
-                  entities: thought.augmented.entities,
-                  keywords: thought.augmented.keywords,
-                } : undefined,
-              }}
-            />
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <AnimatePresence>
+            {thoughts.map((thought) => (
+              <ThoughtCard
+                key={thought._id}
+                thought={{
+                  _id: thought._id,
+                  content: thought.content,
+                  _creationTime: thought.metadata.timestamp,
+                  augmented: thought.augmented ? {
+                    content: thought.augmented.augmentedContent,
+                    zone: thought.augmented.zone,
+                    confidence: thought.augmented.confidence,
+                    entities: thought.augmented.entities,
+                    keywords: thought.augmented.keywords,
+                  } : undefined,
+                }}
+                editMode={editMode}
+              />
+            ))}
+          </AnimatePresence>
         </div>
       )}
       
-      {thoughts.length > 0 && (
+      {thoughts.length > 0 && !editMode && (
         <div className="mt-8 text-center">
           <p className="text-xs text-gray-500">
             💡 Click any card to flip between raw thought and AI insights

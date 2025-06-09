@@ -1,54 +1,33 @@
-# Active Context: Phase 4 - UI Enhancement & Viewport Optimization
+# Active Context: Phase 7 - UI Polish & Animation
 
-## 1. Current Focus: Two-Column Desktop Experience
+## 1. Current Focus: Animated Card Discard
 
-**Phase 4 is COMPLETE!** 🎉 The UI has been significantly enhanced with a 3D card-flip metaphor and a new, wider two-column desktop layout. The previous viewport constraint issue has been resolved.
+**Phase 7 is nearly COMPLETE!** The "Thought Garden" edit mode is functional, allowing users to discard thoughts.
 
-The immediate goal is to merge these UI enhancements and prepare for the next phase of development, which could include vector embeddings or relationship mapping.
+The current focus is on polishing this feature by fixing a UI rendering bug where keyword badges would linger after a card was deleted. This is being addressed by implementing graceful exit animations.
 
 ## 2. Latest Session Progress (Current)
 
-✅ **TypeScript Resolution**: Fixed 6 compilation errors in ai/augmentation.ts
-✅ **User ID Validation**: Updated all validators from `v.id("users")` to `v.string()` for Clerk compatibility
-✅ **Documentation Enhancement**: Updated both CLERK_SETUP.md and CONVEX_SETUP.md with real learnings
-✅ **Card Flip UI**: Implemented 3D flip animation with CSS transforms on `feature/card-flip-ui` branch
-✅ **Layout Optimization**: Successfully transitioned from a single-column stack to a spacious two-column grid layout in [`src/App.tsx`](src/App.tsx:57), resolving the viewport width issue.
+✅ **Animation Library**: Installed `framer-motion` to handle UI animations.
+✅ **TypeScript Fix**: Corrected the `tsconfig.node.json` to support project references required by the new dependency.
+✅ **Animated Exit**: Wrapped the thought cards in `AnimatePresence` and `motion.div` to create a smooth exit animation.
+✅ **Bug Fix**: The "lingering badges" issue is now resolved. The entire card, including all its child elements, animates out cleanly.
 
-## 3. UI Implementation Details
+## 3. Animation Implementation Details
 
 **Technical Implementation**:
-- **Layout**: Two-column grid (`lg:grid-cols-3`) with the main content area set to `max-w-7xl`.
-- **ThoughtCard.tsx**: 3D flip animation with CSS transforms (perspective-1000, backface-hidden, rotate-y-180)
-- **Front Side**: Raw thought with Kalam handwriting font, minimal design
-- **Back Side**: Zone-colored gradients (Mauka/Kula/Makai/Kapu), AI insights, confidence meters, entity tags
-- **Typography**: Added Kalam Google Font for handwriting effect
-- **Metaphor**: Renamed to "Thought Garden" with Hawaiian gardening theme
+- **`package.json`**: Added `framer-motion` as a dependency.
+- **`tsconfig.node.json`**: Set `"composite": true` to resolve TypeScript project reference errors.
+- **`src/components/intake/ThoughtInbox.tsx`**: Wrapped the `.map()` function that renders thought cards with the `<AnimatePresence>` component.
+- **`src/components/intake/ThoughtCard.tsx`**: The root `div` was converted to a `motion.div` with `layout`, `initial`, `animate`, `exit`, and `transition` props to define the animation.
 
 ## 4. Next Immediate Steps
 
-1.  **Merge Feature Branch**: Merge `feature/card-flip-ui` into `main`.
-2.  **Update Documentation**: Ensure all Memory Bank files reflect the completed UI work.
-3.  **Plan Phase 5**: Begin planning the next feature set, such as vector search or relationship mapping.
-4.  **Component Cleanup**: Review and refactor UI components now that the new layout is in place.
+1.  **Final Review**: Verify that the discard animation is smooth and the bug is fully resolved.
+2.  **Update Documentation**: Ensure all Memory Bank files reflect the new animation feature.
+3.  **Plan Next Edit Mode Feature**: Brainstorm the next feature for edit mode, such as re-ordering thoughts.
 
 ## 5. Technical Architecture Status
 
-**Current Stack**: Vite + React + TypeScript + Tailwind CSS + Convex + Clerk + OpenAI
-**Authentication**: Google OAuth through Clerk with string-based user IDs
-**AI**: OpenAI GPT-4o-mini with Hawaiian cultural awareness and memory context
-**UI**: Two-column responsive layout with 3D card flip animations and zone-specific gradient colors.
-**Data Flow**: Real-time capture → AI augmentation → user-specific presentation
-
-## 6. Branch Status
-
-- **main**: Stable with basic functionality
-- **feature/card-flip-ui**: Active development branch with latest UI enhancements. Ready to be merged.
-- **Ready for Testing**: http://localhost:5173 when Convex dev server running
-
-## 7. Key Decisions & Considerations
-
-- **Layout Shift**: Moved from a stacked, single-column layout to a two-column grid to better utilize desktop screen real estate and create a more app-like feel.
-- **Card Metaphor**: Successfully implemented original two-card flip vision
-- **Responsive Design**: Maintained mobile-first approach while optimizing for desktop
-- **Hawaiian Integration**: AI system incorporates cultural context and Ahupuaʻa principles
-- **Real-time Updates**: Live updates without page refresh using Convex subscriptions
+**Current Stack**: Vite + React + TypeScript + Tailwind CSS + Convex + Clerk + OpenAI + **Framer Motion**
+**UI**: Full-width, responsive layout with a two-column thought garden, an edit mode for discarding thoughts, and animated card exits.

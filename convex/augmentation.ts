@@ -214,14 +214,14 @@ export async function mockAugmentThought(content: string) {
 
   // Zone-specific augmentation messages
   const zoneMessages = {
-    mauka: "🌋 Visionary thought - aims high toward the mountain of possibility",
-    kula: "🌱 Practical thought - grows in the fertile plains of action", 
-    makai: "🌊 Emotional thought - flows from the depths of human connection",
-    kapu: "🌫️ Sacred thought - protected in the mists of inner wisdom"
+    mauka: "🌋 Visionary thought",
+    kula: "🌱 Practical thought",
+    makai: "🌊 Emotional thought",
+    kapu: "🌫️ Sacred thought"
   };
 
   return {
-    content: `${zoneMessages[zone]}: ${content}`,
+    content: content, // Return original content for the mock
     zone,
     confidence,
     entities,

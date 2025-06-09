@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
+import { useMutation } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
+import { motion } from 'framer-motion';
 
 interface ThoughtCardProps {
   thought: {
@@ -18,28 +21,48 @@ interface ThoughtCardProps {
       keywords: string[];
     };
   };
+  editMode?: boolean;
 }
 
 const zoneInfo = {
-  mauka: { emoji: '🌋', name: 'Mauka', description: 'Mountain/Visionary', color: 'from-red-400 to-orange-500' },
-  kula: { emoji: '🌱', name: 'Kula', description: 'Plains/Practical', color: 'from-green-400 to-emerald-500' },
-  makai: { emoji: '🌊', name: 'Makai', description: 'Ocean/Emotional', color: 'from-blue-400 to-cyan-500' },
-  kapu: { emoji: '🌫️', name: 'Kapu', description: 'Sacred/Protected', color: 'from-purple-400 to-indigo-500' },
+  mauka: { emoji: '🌋', name: 'Mauka', description: 'Visionary', color: 'from-red-400 to-orange-500' },
+  kula: { emoji: '🌱', name: 'Kula', description: 'Practical', color: 'from-green-400 to-emerald-500' },
+  makai: { emoji: '🌊', name: 'Makai', description: 'Emotional', color: 'from-blue-400 to-cyan-500' },
+  kapu: { emoji: '🌫️', name: 'Kapu', description: 'Sacred', color: 'from-purple-400 to-indigo-500' },
 };
 
-export default function ThoughtCard({ thought }: ThoughtCardProps) {
+export default function ThoughtCard({ thought, editMode }: ThoughtCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
+  const deleteThought = useMutation(api.intake.deleteThought);
   const zone = thought.augmented?.zone || 'kula';
   const zoneData = zoneInfo[zone];
 
-  const handleFlip = () => {
+  const handleFlip = (e: React.MouseEvent) => {
+    if (editMode) {
+      e.stopPropagation();
+      return;
+    }
     setIsFlipped(!isFlipped);
   };
 
+  const handleDiscard = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    deleteThought({ thoughtId: thought._id as any });
+  };
+
   return (
-    <div className="perspective-1000 w-full h-64">
-      <div 
-        className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d cursor-pointer ${
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      transition={{ duration: 0.3 }}
+      className="relative group perspective-1000 w-full h-64"
+    >
+      <div
+        className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
+          !editMode ? 'cursor-pointer' : ''
+        } ${
           isFlipped ? 'rotate-y-180' : ''
         }`}
         onClick={handleFlip}
@@ -53,14 +76,16 @@ export default function ThoughtCard({ thought }: ThoughtCardProps) {
                 <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
                 <span className="text-xs text-gray-500 font-medium">RAW THOUGHT</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-4 h-4 text-gray-400">
-                  <svg fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
-                  </svg>
+              {!editMode && (
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 text-gray-400">
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-xs text-gray-400">FLIP</span>
                 </div>
-                <span className="text-xs text-gray-400">FLIP</span>
-              </div>
+              )}
             </div>
 
             {/* Raw Content */}
@@ -94,14 +119,16 @@ export default function ThoughtCard({ thought }: ThoughtCardProps) {
                   <div className="text-xs opacity-80">{zoneData.description}</div>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-4 h-4">
-                  <svg fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
-                  </svg>
+              {!editMode && (
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4">
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-xs opacity-80">FLIP</span>
                 </div>
-                <span className="text-xs opacity-80">FLIP</span>
-              </div>
+              )}
             </div>
 
             {/* Augmented Content */}
@@ -115,7 +142,7 @@ export default function ThoughtCard({ thought }: ThoughtCardProps) {
                 <div className="flex items-center justify-center space-x-2">
                   <span className="text-xs opacity-80">Confidence:</span>
                   <div className="w-20 h-2 bg-black bg-opacity-20 rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className="h-full bg-white transition-all duration-300"
                       style={{ width: `${thought.augmented.confidence * 100}%` }}
                     />
@@ -169,6 +196,15 @@ export default function ThoughtCard({ thought }: ThoughtCardProps) {
           </div>
         </div>
       </div>
-    </div>
+      {editMode && (
+        <button
+          onClick={handleDiscard}
+          className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+          aria-label="Discard thought"
+        >
+          &times;
+        </button>
+      )}
+    </motion.div>
   );
-} 
+}

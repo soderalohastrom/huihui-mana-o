@@ -216,3 +216,37 @@ export const getIntakeStats = query({
     };
   },
 });
+
+// Delete a thought and its augmented version
+export const deleteThought = mutation({
+  args: {
+    thoughtId: v.id("thoughts"),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("Authentication required");
+    }
+
+    // Check if the thought belongs to the user
+    const thought = await ctx.db.get(args.thoughtId);
+    if (!thought || thought.userId !== userId) {
+      throw new Error("Thought not found or you do not have permission to delete it.");
+    }
+
+    // Find and delete the augmented thought
+    const augmentedThought = await ctx.db
+      .query("augmentedThoughts")
+      .withIndex("by_thoughtId", (q) => q.eq("thoughtId", args.thoughtId))
+      .first();
+
+    if (augmentedThought) {
+      await ctx.db.delete(augmentedThought._id);
+    }
+
+    // Delete the original thought
+    await ctx.db.delete(args.thoughtId);
+
+    return { success: true };
+  },
+});

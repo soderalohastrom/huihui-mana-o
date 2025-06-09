@@ -41,19 +41,24 @@ ${entities.map(e => `- ${e.name} (${e.type}): ${e.description}`).join('\n')}
 Use this context to provide more personalized and relevant augmentation.`;
 };
 
-export const AUGMENTATION_PROMPT = `Given the user's thought and their memory context, create an augmented version that:
+const TEXT_ENRICHMENT_INSTRUCTIONS = `
+Your primary task is to generate the "augmented" text. This text should be an enriched version of the user's original thought.
+- **DO NOT** just repeat the original thought.
+- **DO** rewrite the thought, weaving in context from the user's memory (entities).
+- **DO** keep the tone authentic to the user.
+- **Example 1:** If the thought is "Thinking about my trip to Paris" and "Paris" is in memory as "Capital of France, known for Eiffel Tower", a good enrichment is: "Recalling the trip to Paris, the city of lights and the iconic Eiffel Tower."
+- **Example 2:** If the thought is "My dog Max is playful" and "Max" is in memory as "Golden Retriever, loves fetch", a good enrichment is: "Max, the energetic Golden Retriever who loves playing fetch, is certainly playful."
+`;
 
-1. Adds deeper understanding based on the zone classification
-2. Incorporates relevant entities from their memory graph
-3. Maintains the authentic voice while adding insight
-4. Suggests connections or patterns if apparent
-5. Respects the sacred nature of Kapu thoughts with extra sensitivity
+export const AUGMENTATION_PROMPT = `Given the user's thought and their memory context, create an augmented version.
 
-The augmented thought should feel like wisdom from a trusted friend who knows your history, not a clinical analysis.
+**Enrichment Instructions:**
+${TEXT_ENRICHMENT_INSTRUCTIONS}
 
-Format your response as JSON:
+**JSON Output Format:**
+Format your entire response as a single JSON object.
 {
-  "augmented": "The enriched thought text",
+  "augmented": "The enriched thought text, following the instructions above.",
   "zone": "mauka|kula|makai|kapu",
   "confidence": 0.0-1.0,
   "entities_mentioned": ["entity names found or implied"],

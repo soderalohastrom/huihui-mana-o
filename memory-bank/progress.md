@@ -1,87 +1,61 @@
 # Project Progress: Hui Hui Manaʻo
 
-## Current Status: Phase 4 UI Enhancement - COMPLETE! 🚀
+## Current Status: Phase 7 UI Polish - COMPLETE! ✨
 
-The foundational build is complete with a LIVE Convex backend, full AI integration, and a polished user interface. The original two-card flip metaphor has been successfully implemented with 3D animations, and the desktop layout has been optimized with a new two-column grid, resolving the previous viewport constraints.
+The "Thought Garden" edit mode is now polished with smooth animations, resolving a key UI bug.
 
 ### What Works:
 
--   **✅ LIVE CONVEX BACKEND**: Full real-time database with cloud deployment
--   **✅ Real-time Thought Pipeline**: Complete capture → augment → present flow working
--   **✅ Hawaiian AI Classification**: Sophisticated Ahupuaʻa zone detection (Mauka/Kula/Makai/Kapu)
--   **✅ Database Schema**: All tables working (thoughts, augmentedThoughts, entities, etc.)
--   **✅ Automatic AI Processing**: Scheduled background augmentation with confidence scoring
--   **✅ Demo Mode Fallback**: Graceful fallback when Convex not configured
--   **✅ Project Infrastructure**: Complete Vite + React + TypeScript + Tailwind CSS + Convex
--   **✅ Clerk Authentication**: Google OAuth fully operational with user isolation
--   **✅ OpenAI Integration**: GPT-4o-mini with Hawaiian cultural context and memory awareness
--   **✅ Card Flip UI**: 3D animation with handwriting font and zone-specific styling
--   **✅ Two-Column Layout**: A spacious and responsive grid layout for desktop users.
--   **✅ TypeScript Clean**: All compilation errors resolved
--   **✅ Enhanced Documentation**: Complete setup guides with real-world learnings
+-   **✅ Animated Discard**: Thoughts now animate out gracefully when discarded, fixing the "lingering badges" bug.
+-   **✅ Discard Thoughts**: A new edit mode allows users to delete thoughts from the Thought Garden.
+-   **✅ Full-Width Layout**: The main content area now spans the entire viewport width.
+-   **✅ Two-Column Thought Garden**: The "Thought Garden" is limited to a maximum of two columns.
+-   **✅ Memory-Based Text Augmentation**: The AI rewrites thoughts with context from the user's Memory Graph.
+-   **✅ LIVE CONVEX BACKEND**: Full real-time database with cloud deployment.
+-   **✅ Clerk Authentication**: Google OAuth fully operational.
 
 ### Latest Session Achievements (Current):
 
--   **[x] Viewport Layout Resolution**:
-    -   [x] Successfully diagnosed and fixed the viewport width issue.
-    -   [x] Replaced the single-column, stacked layout with a two-column grid in [`src/App.tsx`](src/App.tsx:57).
-    -   [x] Used `max-w-7xl` and responsive grid classes (`lg:grid-cols-3`) to create a wider, more app-like experience.
--   **[x] TypeScript Error Resolution**:
-    -   [x] Fixed 6 compilation errors in ai/augmentation.ts.
--   **[x] User ID Validation Fix**:
-    -   [x] Updated all user ID validators from `v.id("users")` to `v.string()` for Clerk compatibility.
--   **[x] Documentation Enhancement**:
-    -   [x] Updated CLERK_SETUP.md and CONVEX_SETUP.md with real-world learnings.
--   **[x] Card Flip UI Implementation**:
-    -   [x] Created ThoughtCard.tsx with 3D flip animation.
-    -   [x] Implemented front/back card metaphor.
-    -   [x] Added Kalam Google Font for handwriting effect.
-
-### Completed Tasks:
-
--   **[x] Project Initialization**: Vite + React + Convex + TS + Tailwind.
--   **[x] Capture Service**: `submitThought` mutation.
--   **[x] Augmentation Service**: `processThought` action with AI/mock logic.
--   **[x] Presentation View**: Real-time `ThoughtInbox`.
--   **[x] Demo Mode**: Standalone demo components and fallback logic.
--   **[x] Authentication**: Clerk integration.
--   **[x] AI Integration**: OpenAI with memory context.
--   **[x] UI Enhancements**: 3D Card Flip and Two-Column Layout.
+-   **[x] Fixed "Lingering Badges" Bug**:
+    -   [x] Installed `framer-motion`.
+    -   [x] Corrected `tsconfig.node.json` to support project references.
+    -   [x] Implemented an exit animation on `ThoughtCard` using `AnimatePresence` and `motion.div`.
+-   **[x] Implemented Edit Mode**:
+    -   [x] Added a `deleteThought` mutation.
+    -   [x] Added an "Edit" / "Done" toggle.
+    -   [x] Added a discard button that appears in edit mode.
 
 ### Phase Status Complete:
 
 ✅ **Phase 1**: Core pipeline with mock AI (COMPLETE)
 ✅ **Phase 2**: Clerk authentication integration (COMPLETE)
 ✅ **Phase 3**: OpenAI integration with Hawaiian context (COMPLETE)
-✅ **Phase 4**: UI Enhancement & Layout Optimization (COMPLETE)
+✅ **Phase 4**: UI Enhancement & Initial Layout (COMPLETE)
+✅ **Phase 5**: AI Text Enrichment (COMPLETE)
+✅ **Phase 6**: UI Layout Refinement (COMPLETE)
+✅ **Phase 7**: UI Polish & Animation (COMPLETE)
 
-### Next Steps (Phase 5):
+### Next Steps (Phase 8): Deepening Intelligence & Visualization
 
--   **Vector Embeddings**: Add semantic search for finding similar thoughts.
--   **Relationship Mapping**: Detect and store connections between entities.
--   **Temporal Patterns**: Track how thoughts and their classifications evolve over time.
--   **Visual Canvas**: Implement a drag-and-drop interface for organizing thoughts spatially.
--   **Production Deployment**: Deploy to a service like Vercel or Netlify with a production Convex backend.
+With the core intake pipeline complete and polished, Phase 8 focuses on transforming the collection of thoughts into a true knowledge graph.
 
-### Current Capabilities:
+**See the detailed [Phase 8 Roadmap & Focus document](../../docs/Phase-8_Roadmap_and_Focus.md) for a full breakdown.**
 
--   **🌋 Mauka Zone**: Detects visionary/aspirational thoughts.
--   **🌱 Kula Zone**: Identifies practical/actionable thoughts.
--   **🌊 Makai Zone**: Recognizes emotional/relational thoughts.
--   **🌫️ Kapu Zone**: Classifies sacred/protected thoughts.
--   **Entity Recognition**: Extracts people, places, concepts from text.
--   **Confidence Scoring**: Provides accuracy metrics for classifications.
--   **Keyword Analysis**: Intelligent extraction with stop-word filtering.
--   **Memory Integration**: AI considers user's entity graph for context.
--   **3D Card Animations**: Smooth flip transitions between raw and augmented views.
+The key work streams for this phase are:
+
+1.  **Semantic Memory (Vector Search)**:
+    -   **Goal**: Find thoughts based on meaning, not just keywords.
+    -   **Action**: Generate and index vector embeddings for semantic search.
+2.  **Relational Memory (Entity Connections)**:
+    -   **Goal**: Build explicit connections between entities (people, projects, etc.).
+    -   **Action**: Update the AI to detect and store relationships.
+3.  **Visual Organization (Canvas PoC)**:
+    -   **Goal**: Create a spatial, drag-and-drop interface for organizing thoughts.
+    -   **Action**: Implement a basic canvas view with position persistence.
 
 ### Evolution of Project Decisions:
 
--   **Initial Decision (2023-10-26)**: Technology stack chosen (Vite + React for simplicity and speed).
--   **Foundation Complete (Previous)**: Core pipeline implemented with mock AI.
--   **Demo Enhancement (Previous)**: Sophisticated standalone demo mode.
--   **Authentication Integration (Phase 2)**: Clerk OAuth with user-specific data isolation.
--   **AI Integration (Phase 3)**: OpenAI GPT-4o-mini with Hawaiian cultural awareness.
--   **UI Enhancement (Phase 4)**: 3D card flip animations and a two-column responsive layout.
--   **Branch Strategy**: Created claude-llm and gemini-llm branches for parallel LLM integration experiments.
--   **GitHub Integration**: Published to https://github.com/soderalohastrom/huihui-mana-o
+-   **UI Polish (Phase 7)**: Introduced `framer-motion` to solve a UI rendering bug, resulting in a more polished and professional user experience.
+-   **UI Enhancement (Phase 7)**: Added an edit mode to the Thought Garden.
+-   **UI Enhancement (Phase 6)**: Iterated on the desktop layout to create a full-width, two-column view.
+-   **AI Enhancement (Phase 5)**: Shifted from simple classification to advanced text enrichment.

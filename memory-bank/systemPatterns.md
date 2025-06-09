@@ -4,14 +4,14 @@
 
 The system is designed with a clear separation of concerns:
 
-1.  **`src` (Vite + React Frontend)**: A Vite-powered React application that serves as the user-facing interface. It handles all rendering, user interaction, and state management via Convex hooks.
+1.  **`src` (Vite + React Frontend)**: A Vite-powered React application that serves as the user-facing interface.
 2.  **`convex` (Convex Backend)**: The backend-as-a-service that manages all data, business logic, and real-time communication.
 
-This pattern keeps frontend and backend code logically separate but co-located in the same repository, simplifying dependency management and ensuring consistency.
+This pattern keeps frontend and backend code logically separate but co-located in the same repository.
 
 ## 2. Data Flow Pattern: Capture -> Augment -> Organize -> Present
 
-The application's data flow is linear and unidirectional, ensuring a predictable and scalable process for handling thoughts.
+The application's data flow is linear and unidirectional:
 
 ```mermaid
 graph TD
@@ -33,22 +33,33 @@ graph TD
 ```
 
 -   **Capture**: A user action in a React component directly calls a Convex **mutation**.
--   **Augment**: A Convex **action** (`convex/augmentation.ts`) is triggered *after* a thought is created. Using an action allows for asynchronous, long-running processes (like calling an LLM) without blocking the initial data-saving mutation.
--   **Present**: The UI is built with reactive components that subscribe directly to Convex **queries**. This means the UI will automatically update in real-time as data changes on the backend, without needing manual state management or re-fetching.
+-   **Augment**: A Convex **action** (`convex/augmentation.ts`) is triggered *after* a thought is created.
+-   **Present**: The UI is built with reactive components that subscribe directly to Convex **queries**.
 
-## 3. UI/Layout Pattern: Responsive Two-Column Grid
+## 3. UI/Layout Pattern: Full-Width, Responsive Two-Column Grid with Edit Mode
 
-The primary user interface follows a responsive two-column grid pattern for desktop, which collapses into a single column on smaller screens.
+The UI follows a responsive two-column grid pattern with a stateful edit mode.
 
--   **Desktop Layout (`lg` screens and up)**:
-    -   **Left Column (1/3 width)**: Contains the primary action components: `ThoughtSubmission` and `EntityManager`. This keeps input controls grouped together.
-    -   **Right Column (2/3 width)**: Contains the main content display: `ThoughtInbox`. This provides ample space for viewing the "Thought Garden."
--   **Mobile Layout**: The columns stack vertically, preserving a logical top-to-bottom flow for smaller viewports.
--   **Implementation**: Achieved using Tailwind CSS responsive prefixes (e.g., `grid`, `lg:grid-cols-3`, `lg:col-span-1`, `lg:col-span-2`).
+-   **Overall Container**: The main content area in `src/App.tsx` uses `w-full` for an edge-to-edge feel.
+-   **Main Grid**: A two-column grid (`lg:grid-cols-3`) divides the space.
+-   **Thought Garden Grid**: The `ThoughtInbox` component uses a `md:grid-cols-2` layout.
+-   **Edit Mode**:
+    -   A state (`editMode`) is managed in `ThoughtInbox.tsx`.
+    -   `ThoughtCard.tsx` conditionally renders a "Discard" button.
+    -   The "Discard" button calls the `deleteThought` mutation.
 
-## 4. Key Technical Decisions
+## 4. Animation Pattern: Declarative Animations with Framer Motion
 
--   **Convex as the Single Source of Truth**: All application state resides in Convex. The React frontend is intentionally kept "thin," primarily handling rendering and user events.
--   **Asynchronous Augmentation**: Decoupling the initial save (mutation) from the enrichment process (action) provides immediate user feedback.
--   **Two-Card Data Metaphor**: Each thought has a `rawText` (front) and `augmentedData` (back), preserving authenticity while adding rich context.
--   **Real-time by Default**: Leveraging Convex's `useQuery` and `useMutation` hooks makes the entire application reactive with minimal boilerplate.
+To ensure smooth UI interactions and prevent rendering bugs, the application uses `framer-motion` for animations.
+
+-   **AnimatePresence**: The `ThoughtInbox` wraps its list of cards with `<AnimatePresence>` to manage exit animations.
+-   **motion Components**: The `ThoughtCard` is a `motion.div` with `initial`, `animate`, and `exit` props to define its lifecycle animations.
+-   **Benefit**: This pattern provides a declarative way to handle the enter and exit of components, fixing bugs like "lingering" child elements when a parent is removed from the DOM.
+
+## 5. Key Technical Decisions
+
+-   **Convex as the Single Source of Truth**: All application state resides in Convex.
+-   **Asynchronous Augmentation**: Decoupling the save from the enrichment provides immediate user feedback.
+-   **Two-Card Data Metaphor**: Each thought has a `rawText` (front) and `augmentedData` (back).
+-   **Real-time by Default**: Leveraging Convex's `useQuery` and `useMutation` hooks makes the application reactive.
+-   **Stateful UI for Editing**: Client-side state (`useState`) is used to manage UI modes.
